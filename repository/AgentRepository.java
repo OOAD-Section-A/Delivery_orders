@@ -29,4 +29,11 @@ public class AgentRepository {
             }
         }
     }
+
+    public DeliveryAgent findAgentById(int agentId) {
+        for (DeliveryAgent a : agents) {
+            if (a.agentId == agentId) return a;
+        }
+        return null;
+    }
 }

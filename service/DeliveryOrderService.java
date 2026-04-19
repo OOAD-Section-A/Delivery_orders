@@ -17,6 +17,7 @@ public class DeliveryOrderService {
     private WarehouseService warehouseService;
     private TrackingService trackingService;
     private AgentRepository agentRepo;
+    private CommissionWebhookService commissionWebhook;
     private DeliveryStatusManager statusManager = new DeliveryStatusManager();
 
     public DeliveryOrderService(
@@ -25,7 +26,8 @@ public class DeliveryOrderService {
         OrderFulfillmentService orderService,
         WarehouseService warehouseService,
         TrackingService trackingService,
-        AgentRepository agentRepo
+        AgentRepository agentRepo,
+        CommissionWebhookService commissionWebhook
     ) {
         this.repo = repo;
         this.validator = validator;
@@ -33,6 +35,7 @@ public class DeliveryOrderService {
         this.warehouseService = warehouseService;
         this.trackingService = trackingService;
         this.agentRepo = agentRepo;
+        this.commissionWebhook = commissionWebhook;
     }
 
     public DeliveryOrder createDelivery(int deliveryId, int orderId, int customerId, String address)
@@ -80,6 +83,13 @@ public void updateStatus(int deliveryId, String newStatus) {
     System.out.println("✅ Status updated: " + newStatus);
 
     trackingService.updateStatus(deliveryId, newStatus);
+
+    // 🔔 Fire commission webhook when delivery is completed
+    if ("DELIVERED".equals(newStatus) && commissionWebhook != null) {
+        DeliveryAgent agent = agentRepo.findAgentById(order.assignedAgentId);
+        String agentName = (agent != null) ? agent.name : "Unknown";
+        commissionWebhook.notifyDeliveryCompleted(order, agentName);
+    }
 }
 
 public void assignAgent(int deliveryId) throws AgentAssignmentFailedException {

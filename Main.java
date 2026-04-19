@@ -42,6 +42,17 @@ public class Main {
         OrderFulfillmentService orderService = new DatabaseOrderAdapter(dbGateway);
         TrackingService trackingService = new DatabaseTrackingAdapter(dbGateway);
 
+        // ─────────────────────────────────────────────────────
+        // 💰 COMMISSION SUBSYSTEM INTEGRATION
+        // ─────────────────────────────────────────────────────
+        // Fires an HTTP POST with JSON payload to the Commission
+        // team's webhook whenever a delivery reaches DELIVERED.
+        // Replace the URL below with the Commission team's endpoint.
+        // ─────────────────────────────────────────────────────
+        String commissionWebhookUrl = "http://localhost:8080/api/commission/webhook";
+        CommissionWebhookService commissionWebhook =
+                new CommissionWebhookService(commissionWebhookUrl, dbGateway);
+
         // ⚙️ Initialize main delivery service
         DeliveryOrderService service = new DeliveryOrderService(
                 repo,
@@ -49,7 +60,8 @@ public class Main {
                 orderService,
                 warehouseService,
                 trackingService,
-                agentRepo
+                agentRepo,
+                commissionWebhook
         );
 
         // ═══════════════════════════════════════════════════════
