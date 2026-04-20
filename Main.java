@@ -1,12 +1,10 @@
 // Main.java
 
-import service.DeliveryOrderService;
-import repository.DeliveryRepository;
-import repository.AgentRepository;
-import validator.DeliveryValidator;
-
 import integration.*;
-
+import repository.*;
+import validator.*;
+import service.*;
+import com.jackfruit.scm.database.facade.SupplyChainDatabaseFacade;
 import exception.*;
 
 public class Main {
@@ -31,14 +29,22 @@ public class Main {
         PackingInfoService packingInfo = new PackingInfoService(packingGateway);
 
         // ─────────────────────────────────────────────────────
-        // 🗄️ DATABASE MODULE INTEGRATION
+        // 🗄️ DATABASE MODULE INTEGRATION (REAL)
         // ─────────────────────────────────────────────────────
-        // StubDatabaseGateway simulates Team Jackfruit's DB module.
-        // To switch to real database JAR:
-        //   SupplyChainDatabaseFacade facade = new SupplyChainDatabaseFacade();
-        //   IDatabaseGateway dbGateway = new RealDatabaseGateway(facade);
+        // Team Jackfruit's DB module requires the JAR in lib/
+        // and environment variables for DB_URL, DB_USERNAME, DB_PASSWORD.
         // ─────────────────────────────────────────────────────
-        IDatabaseGateway dbGateway = new StubDatabaseGateway();
+        IDatabaseGateway dbGateway;
+        try {
+            System.out.println("[Main] Initializing Real Database Module...");
+            SupplyChainDatabaseFacade facade = new SupplyChainDatabaseFacade();
+            dbGateway = new RealDatabaseGateway(facade);
+        } catch (Exception e) {
+            System.out.println("[Main] ⚠ Failed to init real DB. Falling back to Stub.");
+            System.out.println("      Error: " + e.getMessage());
+            dbGateway = new StubDatabaseGateway();
+        }
+
         OrderFulfillmentService orderService = new DatabaseOrderAdapter(dbGateway);
         TrackingService trackingService = new DatabaseTrackingAdapter(dbGateway);
 
