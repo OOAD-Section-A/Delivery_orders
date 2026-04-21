@@ -4,21 +4,15 @@ import integration.*;
 import repository.*;
 import validator.*;
 import service.*;
-import exception.*;
-import exception.DeliveryExceptionHandler;
 import com.jackfruit.scm.database.facade.SupplyChainDatabaseFacade;
 import com.jackfruit.scm.exception.SCMExceptionHandler;
+import com.jackfruit.scm.exception.SCMExceptionHandler;
+import com.jackfruit.scm.exception.SCMExceptionHandler;
+import exception.*;
 
 public class Main {
 
     public static void main(String[] args) {
-
-        // ═══════════════════════════════════════════════════════
-        // 🔧 EXCEPTION HANDLING SUBSYSTEM INITIALIZATION
-        // ═══════════════════════════════════════════════════════
-        // Initialize centralized exception handler with SCM integration
-        DeliveryExceptionHandler.initialize();
-        System.out.println();
 
         // 🔧 Setup core components
         DeliveryRepository repo = new DeliveryRepository();
@@ -120,16 +114,12 @@ public class Main {
 
         } catch (InvalidOrderException e) {
             System.out.println("❌ Invalid Order: " + e.getMessage());
-            DeliveryExceptionHandler.handleInvalidOrderException(e);
         } catch (PackingNotConfirmedException e) {
             System.out.println("❌ Packing Issue: " + e.getMessage());
-            DeliveryExceptionHandler.handlePackingException(e);
         } catch (AgentAssignmentFailedException e) {
             System.out.println("❌ Agent Issue: " + e.getMessage());
-            DeliveryExceptionHandler.handleAgentAssignmentException(e);
         } catch (Exception e) {
             System.out.println("❌ Unexpected Error: " + e.getMessage());
-            DeliveryExceptionHandler.handleDeliveryException(e, "DEMO_1");
         }
 
         // ═══════════════════════════════════════════════════════
@@ -146,13 +136,10 @@ public class Main {
 
         } catch (InvalidOrderException e) {
             System.out.println("❌ Correctly rejected: " + e.getMessage());
-            DeliveryExceptionHandler.handleInvalidOrderException(e);
         } catch (PackingNotConfirmedException e) {
             System.out.println("❌ Packing Issue: " + e.getMessage());
-            DeliveryExceptionHandler.handlePackingException(e);
         } catch (Exception e) {
             System.out.println("❌ Error: " + e.getMessage());
-            DeliveryExceptionHandler.handleDeliveryException(e, "DEMO_3");
         }
 
         // ═══════════════════════════════════════════════════════
@@ -169,10 +156,8 @@ public class Main {
 
         } catch (InvalidOrderException e) {
             System.out.println("❌ Correctly rejected: " + e.getMessage());
-            DeliveryExceptionHandler.handleInvalidOrderException(e);
         } catch (Exception e) {
             System.out.println("❌ Error: " + e.getMessage());
-            DeliveryExceptionHandler.handleDeliveryException(e, "DEMO_4");
         }
 
         // ═══════════════════════════════════════════════════════
@@ -189,10 +174,8 @@ public class Main {
 
         } catch (PackingNotConfirmedException e) {
             System.out.println("❌ Correctly rejected: " + e.getMessage());
-            DeliveryExceptionHandler.handlePackingException(e);
         } catch (Exception e) {
             System.out.println("❌ Error: " + e.getMessage());
-            DeliveryExceptionHandler.handleDeliveryException(e, "DEMO_5");
         }
 
         // ═══════════════════════════════════════════════════════
