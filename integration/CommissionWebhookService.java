@@ -2,6 +2,7 @@
 package integration;
 
 import model.DeliveryOrder;
+import integration.IDatabaseGateway.OrderData;
 import integration.IDatabaseGateway.DeliveryData;
 
 import java.io.OutputStream;

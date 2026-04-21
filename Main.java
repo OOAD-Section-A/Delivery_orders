@@ -5,6 +5,9 @@ import repository.*;
 import validator.*;
 import service.*;
 import com.jackfruit.scm.database.facade.SupplyChainDatabaseFacade;
+import com.jackfruit.scm.exception.SCMExceptionHandler;
+import com.jackfruit.scm.exception.SCMExceptionHandler;
+import com.jackfruit.scm.exception.SCMExceptionHandler;
 import exception.*;
 
 public class Main {
@@ -21,8 +24,8 @@ public class Main {
         // ─────────────────────────────────────────────────────
         // StubDeliveryPackingGateway simulates the packing subsystem.
         // To switch to real packing JAR:
-        //   IDeliveryPackingGateway packingGateway =
-        //       new DeliveryPackingGateway(packingModel);
+        // IDeliveryPackingGateway packingGateway =
+        // new DeliveryPackingGateway(packingModel);
         // ─────────────────────────────────────────────────────
         IDeliveryPackingGateway packingGateway = new StubDeliveryPackingGateway();
         WarehouseService warehouseService = new PackingWarehouseAdapter(packingGateway);
@@ -56,8 +59,7 @@ public class Main {
         // Replace the URL below with the Commission team's endpoint.
         // ─────────────────────────────────────────────────────
         String commissionWebhookUrl = "http://localhost:8080/api/commission/webhook";
-        CommissionWebhookService commissionWebhook =
-                new CommissionWebhookService(commissionWebhookUrl, dbGateway);
+        CommissionWebhookService commissionWebhook = new CommissionWebhookService(commissionWebhookUrl, dbGateway);
 
         // ⚙️ Initialize main delivery service
         DeliveryOrderService service = new DeliveryOrderService(
@@ -67,8 +69,7 @@ public class Main {
                 warehouseService,
                 trackingService,
                 agentRepo,
-                commissionWebhook
-        );
+                commissionWebhook);
 
         // ═══════════════════════════════════════════════════════
         // DEMO 1: Packing Integration — View Packed Jobs & Barcodes
